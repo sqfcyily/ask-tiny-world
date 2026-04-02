@@ -4,11 +4,6 @@
   
   <!-- 自定义导航栏 -->
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
-    <!-- 返回按钮 -->
-    <view class="back-btn">
-      <image src="/images/back.png" class="back-icon" mode="aspectFit"></image>
-    </view>
-    <view class="title">小朋友的AI探险</view>
   </view>
 
   <!-- 聊天区域，现在只显示最新的对话，并使用绝对定位模拟图1中的气泡位置 -->

@@ -128,14 +128,10 @@ page {
 }
 
 .btn-icon {
-  width: 90px;
-  height: 90px;
+  width: 120px;
+  height: 120px;
   margin-bottom: 8px;
   transition: all 0.2s ease;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
-  background: #fff;
 }
 
 .btn-icon:active {
