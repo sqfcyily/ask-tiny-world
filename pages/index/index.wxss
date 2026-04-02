@@ -30,20 +30,34 @@ page {
 
 .ai-bubble-container {
   position: absolute;
-  top: 15vh; /* 将气泡固定在距离顶部 15% 视口高度的位置，正好在小动物上方 */
+  bottom: 50vh; /* 将气泡容器底部固定在距离屏幕底部50%视口高度的位置（刚好在小动物上方） */
   left: 50%;
   transform: translateX(-50%);
   width: 85%;
   z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* 限制最大高度，防止顶出屏幕，这里留出顶部胶囊按钮和安全距离的空间 */
+  max-height: calc(50vh - 80px); 
 }
 
 .ai-bubble {
   background: #FFF9F0;
   border: 3px solid #E8D5C4;
   border-radius: 24px;
-  padding: 16px 20px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.08);
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  /* 让 scroll-view 的高度根据内容自适应，但受限于外层 max-height */
+  height: auto; 
+  max-height: 100%;
+}
+
+/* 内部内容增加 padding */
+.bubble-content {
+  padding: 16px 20px;
 }
 
 .msg-text {
@@ -55,14 +69,15 @@ page {
 }
 
 .bubble-tail {
-  position: absolute;
-  bottom: -15px;
-  left: 30px;
+  position: relative; /* 尾巴跟在气泡下面 */
+  left: -25%; /* 偏左对齐狐狸 */
   width: 0;
   height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
   border-top: 18px solid #E8D5C4;
+  margin-top: -3px; /* 盖住一点点气泡的边框 */
+  z-index: 4;
 }
 
 .bubble-tail::after {

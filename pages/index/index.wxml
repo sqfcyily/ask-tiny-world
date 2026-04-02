@@ -2,26 +2,23 @@
   <!-- 背景，使用用户提供的第二张图片 -->
   <image class="bg-layer" src="/images/bg.png" mode="aspectFill"></image>
 
-  <!-- 聊天区域，使用 scroll-view 以便内容过多时可以滚动，防止遮挡人物 -->
-  <scroll-view class="chat-area" scroll-y="true">
-    <!-- 自定义顶部占位，留出胶囊区域的空间 -->
-    <view style="height: {{statusBarHeight + 44}}px;"></view>
-
+  <!-- 聊天区域，整体不滚动 -->
+  <view class="chat-area">
     <!-- AI气泡框（参考图1样式） -->
     <view class="ai-bubble-container" wx:if="{{latestAIMessage}}">
-      <view class="ai-bubble">
-        <text class="msg-text">{{latestAIMessage.content}}</text>
-        <view class="loading" wx:if="{{latestAIMessage.loading}}">
-          <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+      <!-- 气泡主体，使用 scroll-view 以便内容过多时内部滚动 -->
+      <scroll-view class="ai-bubble" scroll-y="true" scroll-into-view="{{scrollToMessage}}">
+        <view id="bubble-content" class="bubble-content">
+          <text class="msg-text">{{latestAIMessage.content}}</text>
+          <view class="loading" wx:if="{{latestAIMessage.loading}}">
+            <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+          </view>
         </view>
-      </view>
+      </scroll-view>
       <!-- 气泡的小尾巴 -->
       <view class="bubble-tail"></view>
     </view>
-    
-    <!-- 底部占位，防止内容被底部按钮遮挡 -->
-    <view class="bottom-padding"></view>
-  </scroll-view>
+  </view>
 
   <!-- 底部操作区 -->
   <view class="input-area">
