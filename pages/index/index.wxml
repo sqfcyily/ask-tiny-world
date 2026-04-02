@@ -1,53 +1,46 @@
 <view class="container">
-  <!-- 背景，使用渐变加云朵元素模拟 -->
-  <view class="bg-layer">
-    <view class="cloud cloud-1"></view>
-    <view class="cloud cloud-2"></view>
-    <view class="cloud cloud-3"></view>
-  </view>
+  <!-- 背景，使用用户提供的第二张图片 -->
+  <image class="bg-layer" src="/images/bg.png" mode="aspectFill"></image>
   
   <!-- 自定义导航栏 -->
   <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <!-- 返回按钮 -->
+    <view class="back-btn">
+      <image src="/images/back.png" class="back-icon" mode="aspectFit"></image>
+    </view>
     <view class="title">小朋友的AI探险</view>
   </view>
 
-  <!-- 聊天区域 -->
-  <scroll-view 
-    class="chat-list" 
-    scroll-y="true" 
-    scroll-into-view="{{scrollToMessage}}"
-    scroll-with-animation="true"
-  >
-    <view 
-      class="message-item {{item.role === 'user' ? 'user-msg' : 'ai-msg'}}" 
-      wx:for="{{messages}}" 
-      wx:key="id" 
-      id="{{item.id}}"
-    >
-      <view class="avatar" wx:if="{{item.role === 'ai'}}">✨</view>
-      <view class="bubble">
-        <text class="msg-text">{{item.content}}</text>
-        <view class="loading" wx:if="{{item.loading}}">
+  <!-- 聊天区域，现在只显示最新的对话，并使用绝对定位模拟图1中的气泡位置 -->
+  <view class="chat-area">
+    <!-- AI气泡框（参考图1样式） -->
+    <view class="ai-bubble-container" wx:if="{{latestAIMessage}}">
+      <view class="ai-bubble">
+        <text class="msg-text">{{latestAIMessage.content}}</text>
+        <view class="loading" wx:if="{{latestAIMessage.loading}}">
           <view class="dot"></view><view class="dot"></view><view class="dot"></view>
         </view>
       </view>
-      <view class="avatar" wx:if="{{item.role === 'user'}}">🧒</view>
+      <!-- 气泡的小尾巴 -->
+      <view class="bubble-tail"></view>
     </view>
-    <!-- 底部占位 -->
-    <view class="bottom-padding"></view>
-  </scroll-view>
+    
+    <!-- 用户提问气泡（暂不显示，或后续通过其他方式展示，目前先隐藏以贴合图1布局） -->
+  </view>
 
   <!-- 底部操作区 -->
   <view class="input-area">
     <!-- 语音按钮 -->
     <view class="btn-container voice-btn-container" bindtouchstart="startRecord" bindtouchend="stopRecord">
-      <view class="btn-icon voice-icon {{isRecording ? 'recording' : ''}}">🌻</view>
+      <image class="btn-icon voice-icon {{isRecording ? 'recording' : ''}}" src="/images/voice-btn.png" mode="aspectFit"></image>
       <text class="btn-text">{{isRecording ? '松开 发送' : '说话提问'}}</text>
     </view>
 
     <!-- 文本按钮 -->
     <view class="btn-container text-btn-container" bindtap="toggleTextInput">
-      <view class="btn-icon text-icon floating">📮</view>
+      <!-- 信箱图标上面有一个小气泡 -->
+      <view class="text-bubble-hint">...</view>
+      <image class="btn-icon text-icon floating" src="/images/text-btn.png" mode="aspectFit"></image>
       <text class="btn-text">输入问题</text>
     </view>
   </view>

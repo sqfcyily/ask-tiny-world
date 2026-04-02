@@ -4,17 +4,15 @@ const recorderManager = wx.getRecorderManager();
 Page({
   data: {
     statusBarHeight: 20,
-    messages: [
-      {
-        id: 'init',
-        role: 'ai',
-        content: '你好呀！我是你的AI好朋友。你想知道为什么天空是蓝色的吗？快来告诉我吧！'
-      }
-    ],
+    latestAIMessage: {
+      id: 'init',
+      role: 'ai',
+      content: '你好呀！我是你的AI好朋友。\n你想知道为什么天空是蓝色的吗？快来告诉我吧！',
+      loading: false
+    },
     inputText: '',
     showTextInput: false,
     isRecording: false,
-    scrollToMessage: '',
   },
 
   onLoad() {
@@ -129,15 +127,9 @@ Page({
     const userMsgId = 'msg_' + Date.now();
     const aiMsgId = 'msg_' + (Date.now() + 1);
     
-    // 添加用户消息和AI等待消息
-    const newMessages = [...this.data.messages, 
-      { id: userMsgId, role: 'user', content },
-      { id: aiMsgId, role: 'ai', content: '', loading: true }
-    ];
-    
+    // 清空当前回复内容，展示loading
     this.setData({
-      messages: newMessages,
-      scrollToMessage: aiMsgId
+      latestAIMessage: { id: aiMsgId, role: 'ai', content: '', loading: true }
     });
 
     this.requestAI(content, aiMsgId);
@@ -148,13 +140,8 @@ Page({
       // 构造系统提示词，让AI语气适合小朋友
       const systemPrompt = "你是小朋友设计的AI助手，回答时先直接给答案（50字内），再用一句话生活化比喻扩展（30-50字），最后以‘所以，回到你的问题：[自动纠正错别字并简洁复述后的问题]，答案是[答案]哦~’收尾，语气亲切、可爱、充满好奇心。回复健康、积极、简洁易懂。可以适当加上emoji，禁止铺垫和专业术语。";
       
-      const history = this.data.messages
-        .filter(m => m.content && !m.loading)
-        .map(m => ({ role: m.role === 'ai' ? 'assistant' : 'user', content: m.content }));
-      
       const messages = [
         { role: 'system', content: systemPrompt },
-        ...history,
         { role: 'user', content: userContent }
       ];
 
@@ -186,14 +173,14 @@ Page({
             fullText += text;
             
             // 更新界面
-            const messagesCopy = [...this.data.messages];
-            const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
-            if (aiMsgIndex > -1) {
-              messagesCopy[aiMsgIndex].content = fullText;
-              messagesCopy[aiMsgIndex].loading = false;
+            if (this.data.latestAIMessage.id === aiMsgId) {
               this.setData({
-                messages: messagesCopy,
-                scrollToMessage: aiMsgId
+                latestAIMessage: {
+                  id: aiMsgId,
+                  role: 'ai',
+                  content: fullText,
+                  loading: false
+                }
               });
             }
           }
@@ -208,14 +195,14 @@ Page({
       }
     } catch (err) {
       console.error('AI请求失败', err);
-      const messagesCopy = [...this.data.messages];
-      const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
-      if (aiMsgIndex > -1) {
-        messagesCopy[aiMsgIndex].content = '哎呀，我刚才开小差了，能再和我说一遍吗？';
-        messagesCopy[aiMsgIndex].loading = false;
+      if (this.data.latestAIMessage.id === aiMsgId) {
         this.setData({
-          messages: messagesCopy,
-          scrollToMessage: aiMsgId
+          latestAIMessage: {
+            id: aiMsgId,
+            role: 'ai',
+            content: '哎呀，我刚才开小差了，能再和我说一遍吗？',
+            loading: false
+          }
         });
       }
     }
