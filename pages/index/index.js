@@ -172,66 +172,33 @@ Page({
 
       let fullText = '';
       
-      // 如果直接返回了对象而不是流，兼容处理
-      if (res && !res.stream && res.data && res.data.choices) {
-         fullText = res.data.choices[0].message.content;
-         const messagesCopy = [...this.data.messages];
-         const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
-         if (aiMsgIndex > -1) {
-           messagesCopy[aiMsgIndex].content = fullText;
-           messagesCopy[aiMsgIndex].loading = false;
-           this.setData({
-             messages: messagesCopy,
-             scrollToMessage: aiMsgId
-           });
-         }
-      } else if (res && res.stream) {
-        // 监听流式返回，微信云开发 AI streamText 可能返回的是 asyncIterator 或者基于事件的 stream 对象
-        // 为了安全起见，检查是否真的是 async iterable
-        if (typeof res.stream[Symbol.asyncIterator] === 'function') {
-          for await (let event of res.stream) {
-            if (event.data && event.data.choices && event.data.choices[0].delta && event.data.choices[0].delta.content) {
-              fullText += event.data.choices[0].delta.content;
-              
-              // 更新界面
-              const messagesCopy = [...this.data.messages];
-              const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
-              if (aiMsgIndex > -1) {
-                messagesCopy[aiMsgIndex].content = fullText;
-                messagesCopy[aiMsgIndex].loading = false;
-                this.setData({
-                  messages: messagesCopy,
-                  scrollToMessage: aiMsgId
-                });
-              }
+      // 监听流式返回，微信云开发 AI streamText 返回的其实是 eventStream 
+      for await (let event of res.eventStream) {
+        if (event.data === "[DONE]") {
+          break;
+        }
+        
+        try {
+          const data = JSON.parse(event.data);
+          const text = data?.choices?.[0]?.delta?.content;
+          
+          if (text) {
+            fullText += text;
+            
+            // 更新界面
+            const messagesCopy = [...this.data.messages];
+            const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
+            if (aiMsgIndex > -1) {
+              messagesCopy[aiMsgIndex].content = fullText;
+              messagesCopy[aiMsgIndex].loading = false;
+              this.setData({
+                messages: messagesCopy,
+                scrollToMessage: aiMsgId
+              });
             }
           }
-        } else {
-          // 如果不是标准的 asyncIterator，尝试用微信特有的事件监听机制
-          res.stream.on('message', (event) => {
-             if (event.data && event.data.choices && event.data.choices[0].delta && event.data.choices[0].delta.content) {
-                fullText += event.data.choices[0].delta.content;
-                const messagesCopy = [...this.data.messages];
-                const aiMsgIndex = messagesCopy.findIndex(m => m.id === aiMsgId);
-                if (aiMsgIndex > -1) {
-                  messagesCopy[aiMsgIndex].content = fullText;
-                  messagesCopy[aiMsgIndex].loading = false;
-                  this.setData({
-                    messages: messagesCopy,
-                    scrollToMessage: aiMsgId
-                  });
-                }
-             }
-          });
-          
-          res.stream.on('error', (err) => {
-             console.error("流事件报错", err);
-          });
-          
-          // 等待流结束
-          await new Promise((resolve) => {
-             res.stream.on('finish', () => resolve());
-          });
+        } catch (e) {
+          console.warn("解析AI数据片段失败:", event.data, e);
         }
       }
       
