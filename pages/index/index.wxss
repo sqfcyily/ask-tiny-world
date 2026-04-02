@@ -30,7 +30,7 @@ page {
 
 .ai-bubble-container {
   position: absolute;
-  bottom: 50vh; /* 将气泡容器底部固定在距离屏幕底部50%视口高度的位置（刚好在小动物上方） */
+  bottom: 68vh; /* 将气泡容器底部固定在距离屏幕底部50%视口高度的位置（刚好在小动物上方） */
   left: 50%;
   transform: translateX(-50%);
   width: 85%;
@@ -61,8 +61,8 @@ page {
 }
 
 .msg-text {
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 16px;
+  line-height: 1.5;
   color: #5D4037;
   font-weight: 500;
   word-break: break-all;
@@ -70,7 +70,7 @@ page {
 
 /* 富文本中的段落样式，控制段落间距 */
 .msg-paragraph {
-  margin-bottom: 8px; /* 减小换行后的空行高度 */
+  margin-bottom: 6px; /* 减小换行后的空行高度 */
 }
 .msg-paragraph:last-child {
   margin-bottom: 0;
@@ -124,9 +124,13 @@ page {
 }
 
 .btn-icon {
-  width: 120px;
-  height: 120px;
-  margin-bottom: 8px;
+  font-size: 68px;
+  width: 88px;
+  height: 88px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
   transition: all 0.2s ease;
 }
 
