@@ -136,24 +136,12 @@ page {
 }
 
 .btn-icon {
-  width: 140px; /* 调大图片 */
-  height: 140px;
-  margin-top: 10px; /* 和上面的文字气泡拉开一点距离 */
   transition: all 0.2s ease;
   border-radius: 50%;
-  border: 4px solid #fff; /* 加粗边框 */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* 加深阴影 */
-  background: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 80px; /* 如果没有图片，emoji也会很大 */
-}
-
-/* 单独调整信箱大小，图里的信箱比话筒大一些 */
-.text-icon {
-  width: 150px;
-  height: 150px;
 }
 
 .text-bubble-hint {

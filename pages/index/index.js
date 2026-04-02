@@ -21,10 +21,20 @@ Page({
     this.setData({
       statusBarHeight: sysInfo.statusBarHeight || 20
     });
-    
+
     this.initRecord();
   },
-
+  showMsg(msg){
+    this.setData({
+      latestAIMessage: {
+        id: 0,
+        role: 'ai',
+        content: "",
+        formattedContent: msg,
+        loading: false
+      }
+    });
+  },
   initRecord() {
     // 监听录音结束事件
     recorderManager.onStop(async (res) => {
@@ -32,31 +42,25 @@ Page({
       // 由于没有同声传译，这里可以先用一个可爱的话语提示，
       // 如果你需要后端或者云函数支持语音转文字，我们可以在这里通过 wx.uploadFile 把语音传上去哦！
       // 现在的替代方案是，模拟一个“听不懂但很可爱”的回复，或者你可以之后接入云开发的语音识别服务～
-      wx.showLoading({ title: '正在听你说...' });
-      
+      this.showMsg('我正在听你说...')
       try {
         // TODO: LO，这里之后可以接入腾讯云或你自己的语音识别接口。
         // 目前我先让它提示用户用文字输入，因为小程序原生没有自带免费的语音转文字 API 了呢。
         setTimeout(() => {
           wx.hideLoading();
-          wx.showModal({
-            title: '哎呀',
-            content: '小码酱还在学习怎么听懂声音呢，你先用信箱写字告诉我好不好呀？',
-            showCancel: false
-          });
+          this.showMsg('我还在学习怎么听懂声音呢，你先用信箱写字告诉我好不好呀？')
         }, 1000);
       } catch (err) {
         wx.hideLoading();
         wx.showToast({ title: '识别失败啦', icon: 'none' });
+      } finally {
+        this.setData({ isRecording: false });
       }
     });
 
     recorderManager.onError((res) => {
       console.error("录音错误：", res.errMsg);
-      wx.showToast({
-        title: '麦克风好像坏啦',
-        icon: 'none'
-      });
+      this.showMsg('麦克风好像坏啦')
       this.setData({ isRecording: false });
     });
   },
@@ -68,7 +72,7 @@ Page({
       success: () => {
         this.setData({ isRecording: true });
         wx.vibrateShort({ type: 'medium' });
-        
+
         const options = {
           duration: 30000,
           sampleRate: 16000,
@@ -79,15 +83,7 @@ Page({
         recorderManager.start(options);
       },
       fail: () => {
-        wx.showModal({
-          title: '需要麦克风',
-          content: '如果不让我听，我就不知道你在说什么啦，去设置里打开麦克风好吗？',
-          success: (res) => {
-            if (res.confirm) {
-              wx.openSetting();
-            }
-          }
-        });
+        this.showMsg('如果不让我听，我就不知道你在说什么啦，去设置里打开麦克风好吗？')
       }
     });
   },
@@ -115,12 +111,12 @@ Page({
   sendText() {
     const text = this.data.inputText.trim();
     if (!text) return;
-    
+
     this.setData({
       inputText: '',
       showTextInput: false
     });
-    
+
     this.sendUserMessage(text);
   },
 
@@ -135,7 +131,7 @@ Page({
   async sendUserMessage(content) {
     const userMsgId = 'msg_' + Date.now();
     const aiMsgId = 'msg_' + (Date.now() + 1);
-    
+
     // 清空当前回复内容，展示loading
     this.setData({
       latestAIMessage: { id: aiMsgId, role: 'ai', content: '', formattedContent: '', loading: true }
@@ -147,8 +143,8 @@ Page({
   async requestAI(userContent, aiMsgId) {
     try {
       // 构造系统提示词，让AI语气适合小朋友
-      const systemPrompt = "你是小朋友设计的AI助手，回答时先直接给答案（50字内），再用一句话生活化比喻扩展（30-50字），最后以‘所以，回到你的问题：[自动纠正错别字并简洁复述后的问题]，答案是[答案]哦~’收尾，语气亲切、可爱、充满好奇心。回复健康、积极、简洁易懂。可以适当加上emoji，禁止铺垫和专业术语。";
-      
+      const systemPrompt = "你是小朋友设计的AI助手，回答时先直接给答案（30字内），再用一句话生活化比喻扩展（30字内），最后以‘所以，[自动纠正错别字并简洁复述后的问题]，答案是[答案]哦~’收尾，语气亲切、可爱、充满好奇心。回复健康、积极、简洁易懂。可以适当加上emoji，禁止铺垫和专业术语。";
+
       const messages = [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userContent }
@@ -167,21 +163,21 @@ Page({
       });
 
       let fullText = '';
-      
+
       // 监听流式返回，微信云开发 AI streamText 返回的其实是 eventStream 
       for await (let event of res.eventStream) {
         if (event.data === "[DONE]") {
           break;
         }
-        
+
         try {
           const data = JSON.parse(event.data);
           const text = data?.choices?.[0]?.delta?.content;
-          
+
           if (text) {
             fullText += text;
             const formatted = this.formatContentToRichText(fullText);
-            
+
             // 更新界面
             if (this.data.latestAIMessage.id === aiMsgId) {
               this.setData({
@@ -199,7 +195,7 @@ Page({
           console.warn("解析AI数据片段失败:", event.data, e);
         }
       }
-      
+
       // 如果没有收到任何内容
       if (!fullText) {
         throw new Error('AI返回内容为空');
