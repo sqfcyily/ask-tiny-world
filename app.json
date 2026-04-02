@@ -6,8 +6,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#c6e4ff",
     "navigationBarTitleText": "小朋友的AI探险",
-    "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationBarTextStyle": "black"
   },
   "sitemapLocation": "sitemap.json"
 }
