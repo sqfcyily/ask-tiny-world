@@ -1,0 +1,70 @@
+<view class="container">
+  <!-- 背景，使用渐变加云朵元素模拟 -->
+  <view class="bg-layer">
+    <view class="cloud cloud-1"></view>
+    <view class="cloud cloud-2"></view>
+    <view class="cloud cloud-3"></view>
+  </view>
+  
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar" style="padding-top: {{statusBarHeight}}px;">
+    <view class="title">小朋友的AI探险</view>
+  </view>
+
+  <!-- 聊天区域 -->
+  <scroll-view 
+    class="chat-list" 
+    scroll-y="true" 
+    scroll-into-view="{{scrollToMessage}}"
+    scroll-with-animation="true"
+  >
+    <view 
+      class="message-item {{item.role === 'user' ? 'user-msg' : 'ai-msg'}}" 
+      wx:for="{{messages}}" 
+      wx:key="id" 
+      id="{{item.id}}"
+    >
+      <view class="avatar" wx:if="{{item.role === 'ai'}}">✨</view>
+      <view class="bubble">
+        <text class="msg-text">{{item.content}}</text>
+        <view class="loading" wx:if="{{item.loading}}">
+          <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+        </view>
+      </view>
+      <view class="avatar" wx:if="{{item.role === 'user'}}">🧒</view>
+    </view>
+    <!-- 底部占位 -->
+    <view class="bottom-padding"></view>
+  </scroll-view>
+
+  <!-- 底部操作区 -->
+  <view class="input-area">
+    <!-- 语音按钮 -->
+    <view class="btn-container voice-btn-container" bindtouchstart="startRecord" bindtouchend="stopRecord">
+      <view class="btn-icon voice-icon {{isRecording ? 'recording' : ''}}">🌻</view>
+      <text class="btn-text">{{isRecording ? '松开 发送' : '说话提问'}}</text>
+    </view>
+
+    <!-- 文本按钮 -->
+    <view class="btn-container text-btn-container" bindtap="toggleTextInput">
+      <view class="btn-icon text-icon floating">📮</view>
+      <text class="btn-text">输入问题</text>
+    </view>
+  </view>
+
+  <!-- 文本输入弹窗 -->
+  <view class="text-input-mask" wx:if="{{showTextInput}}" bindtap="toggleTextInput">
+    <view class="text-input-box" catchtap="preventD">
+      <input 
+        class="input-element" 
+        placeholder="想问什么呀？" 
+        value="{{inputText}}" 
+        bindinput="onInput" 
+        confirm-type="send" 
+        bindconfirm="sendText" 
+        focus="{{showTextInput}}" 
+      />
+      <view class="send-btn" bindtap="sendText">发送</view>
+    </view>
+  </view>
+</view>
