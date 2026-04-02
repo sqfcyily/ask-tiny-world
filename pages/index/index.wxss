@@ -29,8 +29,10 @@ page {
 }
 
 .ai-bubble-container {
-  position: relative;
-  margin: 20px auto 0;
+  position: absolute;
+  top: 15vh; /* 将气泡固定在距离顶部 15% 视口高度的位置，正好在小动物上方 */
+  left: 50%;
+  transform: translateX(-50%);
   width: 85%;
   z-index: 5;
 }

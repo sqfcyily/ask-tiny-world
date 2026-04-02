@@ -4,6 +4,9 @@
 
   <!-- 聊天区域，使用 scroll-view 以便内容过多时可以滚动，防止遮挡人物 -->
   <scroll-view class="chat-area" scroll-y="true">
+    <!-- 自定义顶部占位，留出胶囊区域的空间 -->
+    <view style="height: {{statusBarHeight + 44}}px;"></view>
+
     <!-- AI气泡框（参考图1样式） -->
     <view class="ai-bubble-container" wx:if="{{latestAIMessage}}">
       <view class="ai-bubble">
