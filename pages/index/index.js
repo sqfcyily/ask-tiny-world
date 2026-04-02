@@ -146,7 +146,7 @@ Page({
   async requestAI(userContent, aiMsgId) {
     try {
       // 构造系统提示词，让AI语气适合小朋友
-      const systemPrompt = "你是一个面向小朋友的AI好朋友。你的语气应该亲切、可爱、充满好奇心。回复要健康、积极、简洁易懂，多用比喻，并且可以适当加上emoji。不要用复杂的专业词汇。尽量用简短的句子回答。";
+      const systemPrompt = "你是小朋友设计的AI助手，回答时先直接给答案（50字内），再用一句话生活化比喻扩展（30-50字），最后以‘所以，回到你的问题：[自动纠正错别字并简洁复述后的问题]，答案是[答案]哦~’收尾，语气亲切、可爱、充满好奇心。回复健康、积极、简洁易懂。可以适当加上emoji，禁止铺垫和专业术语。";
       
       const history = this.data.messages
         .filter(m => m.content && !m.loading)
