@@ -8,6 +8,7 @@ Page({
       id: 'init',
       role: 'ai',
       content: '你好呀！我是你的AI好朋友。\n你想知道为什么天空是蓝色的吗？快来告诉我吧！',
+      formattedContent: '<div class="msg-paragraph">你好呀！我是你的AI好朋友。</div><div class="msg-paragraph">你想知道为什么天空是蓝色的吗？快来告诉我吧！</div>',
       loading: false
     },
     inputText: '',
@@ -123,13 +124,21 @@ Page({
     this.sendUserMessage(text);
   },
 
+  // 格式化文本为富文本节点，控制换行间距
+  formatContentToRichText(text) {
+    if (!text) return '';
+    // 将多个连续换行替换为单个换行，然后按换行符分割成段落
+    const paragraphs = text.replace(/\n+/g, '\n').split('\n').filter(p => p.trim() !== '');
+    return paragraphs.map(p => `<div class="msg-paragraph">${p}</div>`).join('');
+  },
+
   async sendUserMessage(content) {
     const userMsgId = 'msg_' + Date.now();
     const aiMsgId = 'msg_' + (Date.now() + 1);
     
     // 清空当前回复内容，展示loading
     this.setData({
-      latestAIMessage: { id: aiMsgId, role: 'ai', content: '', loading: true }
+      latestAIMessage: { id: aiMsgId, role: 'ai', content: '', formattedContent: '', loading: true }
     });
 
     this.requestAI(content, aiMsgId);
@@ -171,6 +180,7 @@ Page({
           
           if (text) {
             fullText += text;
+            const formatted = this.formatContentToRichText(fullText);
             
             // 更新界面
             if (this.data.latestAIMessage.id === aiMsgId) {
@@ -179,6 +189,7 @@ Page({
                   id: aiMsgId,
                   role: 'ai',
                   content: fullText,
+                  formattedContent: formatted,
                   loading: false
                 }
               });
@@ -201,6 +212,7 @@ Page({
             id: aiMsgId,
             role: 'ai',
             content: '哎呀，我刚才开小差了，能再和我说一遍吗？',
+            formattedContent: '<div class="msg-paragraph">哎呀，我刚才开小差了，能再和我说一遍吗？</div>',
             loading: false
           }
         });

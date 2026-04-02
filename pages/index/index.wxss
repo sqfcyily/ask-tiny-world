@@ -68,6 +68,14 @@ page {
   word-break: break-all;
 }
 
+/* 富文本中的段落样式，控制段落间距 */
+.msg-paragraph {
+  margin-bottom: 8px; /* 减小换行后的空行高度 */
+}
+.msg-paragraph:last-child {
+  margin-bottom: 0;
+}
+
 .bubble-tail {
   position: relative; /* 尾巴跟在气泡下面 */
   left: -25%; /* 偏左对齐狐狸 */
