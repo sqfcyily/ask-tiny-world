@@ -32,7 +32,7 @@
   <view class="input-area">
     <!-- 语音按钮 -->
     <view class="btn-container voice-btn-container" bindtouchstart="startRecord" bindtouchend="stopRecord">
-      <image class="btn-icon voice-icon {{isRecording ? 'recording' : ''}}" src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=A%20cute%20cartoon%20toy%20microphone%20shaped%20like%20a%20colorful%20flower%20with%20a%20smiley%20face%20in%20the%20center%2C%20bright%20colors%2C%202D%20vector%20art%2C%20white%20background&image_size=square" mode="aspectFit"></image>
+      <image class="btn-icon voice-icon {{isRecording ? 'recording' : ''}}" src="/images/voice-btn.png" mode="aspectFit"></image>
       <text class="btn-text">{{isRecording ? '松开 发送' : '说话提问'}}</text>
     </view>
 
@@ -40,7 +40,7 @@
     <view class="btn-container text-btn-container" bindtap="toggleTextInput">
       <!-- 信箱图标上面有一个小气泡 -->
       <view class="text-bubble-hint">...</view>
-      <image class="btn-icon text-icon floating" src="https://coresg-normal.trae.ai/api/ide/v1/text_to_image?prompt=A%20cute%20cartoon%20wooden%20mailbox%20toy%20with%20a%20red%20flag%20up%20and%20colorful%20toy%20blocks%20around%20it%2C%20bright%20colors%2C%202D%20vector%20art%2C%20white%20background&image_size=square" mode="aspectFit"></image>
+      <image class="btn-icon text-icon floating" src="/images/text-btn.png" mode="aspectFit"></image>
       <text class="btn-text">输入问题</text>
     </view>
   </view>
