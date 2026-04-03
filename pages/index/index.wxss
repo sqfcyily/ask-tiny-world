@@ -269,15 +269,16 @@ page {
   top: 15px;
   width: 32px;
   height: 32px;
-  background: transparent;
-  border-radius: 50%;
+  background: #FF8A65; /* 温暖的橘红色背景 */
+  border-radius: 10px; /* 带大圆角的正方形 */
   text-align: center;
   line-height: 32px;
   font-weight: 900;
-  font-size: 20px;
-  color: #D84315;
-  text-shadow: 0 2px 4px rgba(216, 67, 21, 0.4);
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 3px 0 #D84315, 0 4px 6px rgba(0, 0, 0, 0.15); /* 底部厚度阴影，模拟实体按键 */
+  border: 2px solid #fff; /* 加一圈白边，更像贴纸 */
+  transition: all 0.1s ease; /* 动画加快，让按压更干脆 */
 }
 
 .history-clear {
@@ -286,17 +287,19 @@ page {
   top: 15px;
   width: 32px;
   height: 32px;
-  background: transparent;
-  border-radius: 50%;
+  background: #4DD0E1; /* 清新的浅蓝色背景 */
+  border-radius: 10px; /* 带大圆角的正方形 */
   text-align: center;
   line-height: 32px;
-  font-size: 20px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  font-size: 18px;
+  box-shadow: 0 3px 0 #00ACC1, 0 4px 6px rgba(0, 0, 0, 0.15); /* 底部厚度阴影，模拟实体按键 */
+  border: 2px solid #fff; /* 加一圈白边 */
+  transition: all 0.1s ease;
 }
 
 .history-close:active, .history-clear:active {
-  transform: scale(0.8) rotate(-10deg);
+  transform: translateY(3px) scale(0.95); /* 按下去的时候感觉被压扁了 */
+  box-shadow: 0 0 0 transparent, 0 1px 2px rgba(0, 0, 0, 0.1); /* 按下时厚度消失 */
 }
 
 .history-scroll {
