@@ -76,7 +76,7 @@ page {
   z-index: 5;
   display: flex;
   flex-direction: column;
-  align-items: center; /* 让气泡整体在屏幕居中 */
+  align-items: flex-start; /* ✨让整个气泡内容区域在最外层容器中靠左对齐 */
   /* 限制最大高度，防止顶出屏幕，这里留出顶部胶囊按钮和安全距离的空间 */
   max-height: calc(50vh - 80px); 
 }
@@ -89,6 +89,10 @@ page {
   width: max-content; /* 宽度由内容决定 */
   min-width: 50%; /* 最小宽度为容器的 50% */
   max-width: 100%; /* 最大不能超过父容器 */
+  
+  /* 调整气泡在 85% 容器中的起始位置 */
+  /* 虽然容器靠左对齐了，但我们可以用一点 margin 把它稍微往中间推一点点，对准小动物 */
+  margin-left: 10%; 
 }
 
 .ai-bubble {
@@ -134,7 +138,7 @@ page {
   position: relative; /* 尾巴跟在气泡下面 */
   /* 让尾巴始终保持在自身容器偏左的位置 */
   align-self: flex-start;
-  margin-left: 20%; 
+  margin-left: 25px; /* 尾巴距离气泡左边缘固定 25px */
   width: 0;
   height: 0;
   border-left: 15px solid transparent;
