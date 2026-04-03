@@ -4,7 +4,7 @@
 
   <!-- 左上角声音开关 -->
   <view class="sound-toggle" bindtap="toggleSound" style="top: {{statusBarHeight + 10}}px;">
-    <view class="sound-icon {{enableSound ? 'sound-on' : 'sound-off'}}">{{enableSound ? '🎵' : '🔇'}}</view>
+    <view class="sound-icon {{enableSound ? 'sound-on' : 'sound-off'}}">{{enableSound ? '🔊' : '🔇'}}</view>
   </view>
 
   <!-- 聊天区域，整体不滚动 -->

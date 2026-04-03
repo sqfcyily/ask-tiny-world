@@ -46,11 +46,17 @@ page {
 }
 
 .sound-on {
-  animation: float 2s ease-in-out infinite;
+  animation: pulse-zoom 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulse-zoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 .sound-off {
   filter: grayscale(100%) opacity(0.6);
+  animation: none; /* 关闭声音时停止动画 */
 }
 
 .chat-area {
