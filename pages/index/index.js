@@ -26,7 +26,56 @@ Page({
     });
 
     this.initRecord();
+    // 小程序启动时，唤醒那些沉睡的回忆~ ✨
+    this.loadChatHistoryFromCloud();
   },
+
+  // ✨ 从云数据库拉取历史对话回忆
+  async loadChatHistoryFromCloud() {
+    try {
+      const db = wx.cloud.database();
+      // 获取当前用户创建的对话，按时间降序排列，取最近的20条（可以根据需要调整）
+      const res = await db.collection('chat_history')
+        .orderBy('createTime', 'desc')
+        .limit(20)
+        .get();
+
+      if (res.data && res.data.length > 0) {
+        // 因为是从数据库按降序拿的（最新的在最前），我们把它反转一下，让旧的在上面，新的在下面
+        const historyData = res.data.reverse().map(item => ({
+          id: item._id, // 使用云数据库生成的 _id 作为唯一标识
+          question: item.question,
+          answer: item.answer,
+          aiAvatar: item.aiAvatar || '🦊' // 兼容一下旧数据如果没有头像的情况
+        }));
+
+        this.setData({
+          chatHistory: historyData
+        });
+
+        // 既然有回忆，就在草地上生成信封吧！最多显示3个哦
+        const envelopeCount = Math.min(historyData.length, 3);
+        const newEnvelopes = [];
+        for (let i = 0; i < envelopeCount; i++) {
+          newEnvelopes.push({
+            id: `env_${Date.now()}_${i}`,
+            rotation: Math.floor(Math.random() * 60) - 30,
+            offsetX: Math.floor(Math.random() * 40) - 20,
+            offsetY: Math.floor(Math.random() * 40) - 20
+          });
+        }
+        
+        this.setData({
+          envelopes: newEnvelopes
+        });
+
+        console.log('✨ 成功唤醒了', historyData.length, '条回忆呢！');
+      }
+    } catch (err) {
+      console.error('哎呀，拉取云端回忆失败了:', err);
+    }
+  },
+
   showMsg(msg){
     this.setData({
       latestAIMessage: {
