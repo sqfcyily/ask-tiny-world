@@ -277,11 +277,11 @@ Page({
   },
 
   // ✨ 将对话保存到云数据库
-  async saveChatToCloud(question, answer, aiAvatar) {
+  async saveChatToCloud(question, answer, aiAvatar, localMsgId) {
     try {
       const db = wx.cloud.database();
       // 小程序端直接调用 add 方法，微信会自动帮我们带上用户的 _openid
-      await db.collection('chat_history').add({
+      const res = await db.collection('chat_history').add({
         data: {
           question: question,
           answer: answer,
@@ -289,7 +289,18 @@ Page({
           createTime: db.serverDate() // 记录创建的服务器时间
         }
       });
-      console.log('✨ 历史对话保存到云端成功啦！');
+      
+      console.log('✨ 历史对话保存到云端成功啦！云端ID:', res._id);
+      
+      // 拿到云端生成的 _id 后，更新我们本地的 chatHistory 数组
+      // 这样用户刚刚聊完天，马上点清空，也能找到正确的云端 ID 啦！
+      const { chatHistory } = this.data;
+      const targetIndex = chatHistory.findIndex(item => item.id === localMsgId);
+      if (targetIndex !== -1) {
+        chatHistory[targetIndex].id = res._id;
+        this.setData({ chatHistory });
+      }
+
     } catch (err) {
       console.error('哎呀，保存对话到云端失败了:', err);
     }
@@ -374,8 +385,10 @@ Page({
         // 对话成功，保存到历史记录
         const { chatHistory } = this.data;
         const finalFormatted = this.formatContentToRichText(fullText);
+        const localMsgId = Date.now(); // 生成一个临时的本地 ID
+
         chatHistory.push({
-          id: Date.now(),
+          id: localMsgId,
           question: userContent,
           answer: finalFormatted, // 存入处理过换行间距的富文本
           aiAvatar: randomAnimal // 记录本次对话的 AI 头像
@@ -386,7 +399,8 @@ Page({
         this.addEnvelope();
 
         // 将这段珍贵的回忆偷偷塞进云数据库保存起来~
-        this.saveChatToCloud(userContent, finalFormatted, randomAnimal);
+        // 并把刚刚生成的 localMsgId 传过去，方便云端返回真 ID 后替换它
+        this.saveChatToCloud(userContent, finalFormatted, randomAnimal, localMsgId);
       }
     } catch (err) {
       console.error('AI请求失败', err);
