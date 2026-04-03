@@ -23,11 +23,8 @@ App({
       success: (res) => {
         if (res.code) {
           console.log('登录成功，获取到 code:', res.code);
-          // TODO: LO，这里之后可以调用你自己的后端接口，或者用云函数把 code 换成 openid 存下来哦！
-          // 由于现在没有具体的后端服务或云函数名称，我们可以先通过云函数自动获取 openid (这是最推荐的做法)。
-          
+
           // 如果你之后配置了云函数，可以解开下面的注释来静默获取用户的 openid：
-          /*
           wx.cloud.callFunction({
             name: 'login', // 假设你有一个名为 login 的云函数
             success: (cloudRes) => {
@@ -38,7 +35,6 @@ App({
               console.error('获取 openid 失败:', err);
             }
           });
-          */
         } else {
           console.log('登录失败！' + res.errMsg);
         }
