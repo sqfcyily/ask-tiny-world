@@ -11,6 +11,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "tencentcloud-sdk-nodejs-tts": "^4.1.203"
+    "tencentcloud-sdk-nodejs-tts": "^4.1.203",
+    "wx-server-sdk": "^3.0.4"
   }
 }
