@@ -281,6 +281,14 @@ page {
   width: 60px;
   height: 60px;
   z-index: 4; /* 在背景之上，气泡层之下 */
+  border-radius: 50%; /* 让光晕更均匀地包裹这片区域 */
+}
+
+/* 当有信封时，整个容器一起闪动光晕 */
+.container-glow {
+  animation: pulse 1.5s infinite;
+  /* 整体外层光晕效果，颜色更柔和贴合草地 */
+  filter: drop-shadow(0 0 12px rgba(255, 138, 128, 0.8));
 }
 
 .envelope-wrapper {
@@ -290,9 +298,7 @@ page {
   transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 掉落时的Q弹效果 */
 }
 
-.envelope-glow {
+.envelope-item {
   font-size: 45px;
-  animation: pulse 1.5s infinite;
-  /* 完美复刻录音按钮的光纹效果 */
-  filter: drop-shadow(0 0 10px rgba(255, 138, 128, 0.8));
+  /* 移除单独的光晕，改由外层 container-glow 负责 */
 }

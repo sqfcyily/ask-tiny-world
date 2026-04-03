@@ -21,14 +21,15 @@
   </view>
 
   <!-- 信封收集区 (左边草地)，代表历史记录 -->
-  <view class="envelopes-container">
+  <!-- 作为一个整体进行光晕闪动动画 -->
+  <view class="envelopes-container {{envelopes.length > 0 ? 'container-glow' : ''}}">
     <view 
       wx:for="{{envelopes}}" 
       wx:key="id"
       class="envelope-wrapper"
       style="transform: translate({{item.offsetX}}px, {{item.offsetY}}px) rotate({{item.rotation}}deg); z-index: {{index}};"
     >
-      <view class="envelope-glow">✉️</view>
+      <view class="envelope-item">✉️</view>
     </view>
   </view>
 
