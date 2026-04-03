@@ -215,7 +215,9 @@ Page({
       success: async (res) => {
         if (res.confirm) {
           try {
-            wx.showLoading({ title: '正在清理...' });
+            // 用 AI 气泡提示正在清理，取代冰冷的 loading
+            this.showMsg('正在努力把旧信件扫进垃圾桶，稍等一下哦...');
+            
             const db = wx.cloud.database();
             
             // 云开发小程序端不能直接批量删除所有记录，所以我们需要获取所有ID然后逐个删除，或者调用云函数。
@@ -234,12 +236,12 @@ Page({
               showHistory: false // 关掉弹窗
             });
 
-            wx.hideLoading();
-            wx.showToast({ title: '回忆已清空', icon: 'none' });
+            // 清理完成后，用 AI 气泡温柔地通知
+            this.showMsg('呼~ 回忆信箱已经打扫得干干净净啦！我们可以开始新的对话了哦！');
           } catch (err) {
-            wx.hideLoading();
             console.error('清空云端回忆失败:', err);
-            wx.showToast({ title: '清理失败了', icon: 'none' });
+            // 清理失败时，用 AI 气泡提醒
+            this.showMsg('哎呀，信箱盖子好像卡住了，垃圾没倒掉，等会儿再试一次好吗？');
           }
         }
       }
