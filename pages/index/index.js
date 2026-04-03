@@ -35,16 +35,12 @@ Page({
 
   // 初始化小程序音频上下文
   initAudioPlayer() {
-    // ✨ 在微信开发者工具和 Windows 微信上，推荐使用 createWebAudioContext 或直接让 innerAudioContext 自动解析，
-    // 但保险起见，我们重新初始化它，并在每次播放前重置 src。
     this.innerAudioContext = wx.createInnerAudioContext();
     this.innerAudioContext.onPlay(() => {
       console.log('✨ 小动物开始说话啦');
     });
     this.innerAudioContext.onError((res) => {
       console.error('音频播放出错了:', res.errMsg, res.errCode);
-      // 有时候在 PC 端或开发者工具上，可能因为解码器不支持某些特定格式报错
-      wx.showToast({ title: '哎呀，我嗓子哑了，没法说话啦', icon: 'none' });
     });
   },
 
@@ -54,6 +50,7 @@ Page({
     if (!this.data.enableSound || !text) return;
 
     try {
+      // 告诉小朋友，我们正在施展声音魔法（可选，这里我就不打断界面了，默默在后台合成）
       console.log('正在将文字转换为声音...');
       
       const result = await wx.cloud.callFunction({
@@ -65,27 +62,15 @@ Page({
       
       if (resData && resData.code === 0 && resData.audioBase64) {
         // 腾讯云返回的是 Base64 编码的音频数据
+        // 小程序不能直接播放 base64 字符串，需要先把它写到本地临时文件里
         const fsm = wx.getFileSystemManager();
         const filePath = `${wx.env.USER_DATA_PATH}/temp_voice_${Date.now()}.mp3`;
         
-        // 确保以 base64 格式写入文件
         fsm.writeFileSync(filePath, resData.audioBase64, 'base64');
         
-        console.log('音频文件已写入:', filePath);
-
-        // 如果之前的音频还在播放，先停掉
-        if (this.innerAudioContext) {
-          this.innerAudioContext.stop();
-          // 重置音频上下文，部分机型/环境（如 Windows 微信）在覆盖同一个 InnerAudioContext 的 src 时容易出错
-          this.innerAudioContext.src = '';
-        }
-        
-        // ✨ 重要修复：使用 setTimeout 稍微延迟一下播放，确保文件完全落盘，并且微信内核读取文件不冲突
-        setTimeout(() => {
-          this.innerAudioContext.src = filePath;
-          this.innerAudioContext.play();
-        }, 100);
-
+        // 把临时文件的路径丢给音频播放器
+        this.innerAudioContext.src = filePath;
+        this.innerAudioContext.play();
       } else {
         console.error('语音合成云函数返回异常:', resData);
       }
