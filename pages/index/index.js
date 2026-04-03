@@ -183,6 +183,25 @@ Page({
     return paragraphs.map(p => `<div class="msg-paragraph">${p}</div>`).join('');
   },
 
+  // ✨ 将对话保存到云数据库
+  async saveChatToCloud(question, answer, aiAvatar) {
+    try {
+      const db = wx.cloud.database();
+      // 小程序端直接调用 add 方法，微信会自动帮我们带上用户的 _openid
+      await db.collection('chat_history').add({
+        data: {
+          question: question,
+          answer: answer,
+          aiAvatar: aiAvatar,
+          createTime: db.serverDate() // 记录创建的服务器时间
+        }
+      });
+      console.log('✨ 历史对话保存到云端成功啦！');
+    } catch (err) {
+      console.error('哎呀，保存对话到云端失败了:', err);
+    }
+  },
+
   async sendUserMessage(content) {
     const userMsgId = 'msg_' + Date.now();
     const aiMsgId = 'msg_' + (Date.now() + 1);
@@ -272,9 +291,13 @@ Page({
         
         // 触发信封掉落动画
         this.addEnvelope();
+
+        // 将这段珍贵的回忆偷偷塞进云数据库保存起来~
+        this.saveChatToCloud(userContent, finalFormatted, randomAnimal);
       }
     } catch (err) {
       console.error('AI请求失败', err);
+
       if (this.data.latestAIMessage.id === aiMsgId) {
         this.setData({
           latestAIMessage: {
