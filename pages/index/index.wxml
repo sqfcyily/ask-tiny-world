@@ -20,6 +20,18 @@
     </view>
   </view>
 
+  <!-- 信封收集区 (左边草地)，代表历史记录 -->
+  <view class="envelopes-container">
+    <view 
+      wx:for="{{envelopes}}" 
+      wx:key="id"
+      class="envelope-wrapper"
+      style="transform: translate({{item.offsetX}}px, {{item.offsetY}}px) rotate({{item.rotation}}deg); z-index: {{index}};"
+    >
+      <view class="envelope-glow">✉️</view>
+    </view>
+  </view>
+
   <!-- 底部操作区 -->
   <view class="input-area">
     <!-- 语音按钮 -->

@@ -4,6 +4,8 @@ const recorderManager = wx.getRecorderManager();
 Page({
   data: {
     statusBarHeight: 20,
+    chatHistory: [], // 保存的历史对话
+    envelopes: [],   // 控制草地上的信封显示
     latestAIMessage: {
       id: 'init',
       role: 'ai',
@@ -92,6 +94,25 @@ Page({
     if (!this.data.isRecording) return;
     this.setData({ isRecording: false });
     recorderManager.stop();
+  },
+
+  addEnvelope() {
+    const { envelopes } = this.data;
+    if (envelopes.length < 3) {
+      // 随机旋转角度 -30 到 30 度
+      const rotation = Math.floor(Math.random() * 60) - 30;
+      // 随机偏移位置
+      const offsetX = Math.floor(Math.random() * 40) - 20;
+      const offsetY = Math.floor(Math.random() * 40) - 20;
+      
+      envelopes.push({
+        id: Date.now(),
+        rotation,
+        offsetX,
+        offsetY
+      });
+      this.setData({ envelopes });
+    }
   },
 
   toggleTextInput() {
@@ -199,6 +220,17 @@ Page({
       // 如果没有收到任何内容
       if (!fullText) {
         throw new Error('AI返回内容为空');
+      } else {
+        // 对话成功，保存到历史记录
+        const { chatHistory } = this.data;
+        chatHistory.push({
+          question: userContent,
+          answer: fullText
+        });
+        this.setData({ chatHistory });
+        
+        // 触发信封掉落动画
+        this.addEnvelope();
       }
     } catch (err) {
       console.error('AI请求失败', err);

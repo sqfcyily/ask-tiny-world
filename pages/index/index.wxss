@@ -272,3 +272,27 @@ page {
   0%, 80%, 100% { transform: scale(0); }
   40% { transform: scale(1); }
 }
+
+/* 左侧草地上的信封收集区 */
+.envelopes-container {
+  position: absolute;
+  bottom: 25vh; /* 刚好在男孩左边的草地上，狐狸下方 */
+  left: 18vw;
+  width: 60px;
+  height: 60px;
+  z-index: 4; /* 在背景之上，气泡层之下 */
+}
+
+.envelope-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 掉落时的Q弹效果 */
+}
+
+.envelope-glow {
+  font-size: 45px;
+  animation: pulse 1.5s infinite;
+  /* 完美复刻录音按钮的光纹效果 */
+  filter: drop-shadow(0 0 10px rgba(255, 138, 128, 0.8));
+}
