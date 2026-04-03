@@ -4,6 +4,7 @@ const recorderManager = wx.getRecorderManager();
 Page({
   data: {
     statusBarHeight: 20,
+    enableSound: true, // 控制声音开关，默认开启
     chatHistory: [], // 保存的历史对话
     envelopes: [],   // 控制草地上的信封显示
     showHistory: false, // 控制历史对话弹窗的显示
@@ -26,8 +27,56 @@ Page({
     });
 
     this.initRecord();
+    this.initAudioPlayer(); // ✨ 初始化音频播放器
+    
     // 小程序启动时，唤醒那些沉睡的回忆~ ✨
     this.loadChatHistoryFromCloud();
+  },
+
+  // 初始化小程序音频上下文
+  initAudioPlayer() {
+    this.innerAudioContext = wx.createInnerAudioContext();
+    this.innerAudioContext.onPlay(() => {
+      console.log('✨ 小动物开始说话啦');
+    });
+    this.innerAudioContext.onError((res) => {
+      console.error('音频播放出错了:', res.errMsg, res.errCode);
+    });
+  },
+
+  // ✨ 调用云函数进行语音合成并播放
+  async playVoice(text) {
+    // 如果声音开关关闭，或者没有文本，就不出声
+    if (!this.data.enableSound || !text) return;
+
+    try {
+      // 告诉小朋友，我们正在施展声音魔法（可选，这里我就不打断界面了，默默在后台合成）
+      console.log('正在将文字转换为声音...');
+      
+      const result = await wx.cloud.callFunction({
+        name: 'textToVoice',
+        data: { text: text }
+      });
+
+      const resData = result.result;
+      
+      if (resData && resData.code === 0 && resData.audioBase64) {
+        // 腾讯云返回的是 Base64 编码的音频数据
+        // 小程序不能直接播放 base64 字符串，需要先把它写到本地临时文件里
+        const fsm = wx.getFileSystemManager();
+        const filePath = `${wx.env.USER_DATA_PATH}/temp_voice_${Date.now()}.mp3`;
+        
+        fsm.writeFileSync(filePath, resData.audioBase64, 'base64');
+        
+        // 把临时文件的路径丢给音频播放器
+        this.innerAudioContext.src = filePath;
+        this.innerAudioContext.play();
+      } else {
+        console.error('语音合成云函数返回异常:', resData);
+      }
+    } catch (err) {
+      console.error('调用语音合成云函数失败:', err);
+    }
   },
 
   // ✨ 从云数据库拉取历史对话回忆
@@ -194,6 +243,21 @@ Page({
     this.setData({
       showTextInput: !this.data.showTextInput
     });
+  },
+
+  // 切换声音开关
+  toggleSound() {
+    const newStatus = !this.data.enableSound;
+    this.setData({ enableSound: newStatus });
+    if (newStatus) {
+      wx.showToast({ title: '声音已开启', icon: 'none' });
+    } else {
+      wx.showToast({ title: '声音已关闭', icon: 'none' });
+      // 如果声音正在播放，关闭开关时停止播放
+      if (this.innerAudioContext) {
+        this.innerAudioContext.stop();
+      }
+    }
   },
 
   // 切换历史记录弹窗
@@ -401,6 +465,9 @@ Page({
         // 将这段珍贵的回忆偷偷塞进云数据库保存起来~
         // 并把刚刚生成的 localMsgId 传过去，方便云端返回真 ID 后替换它
         this.saveChatToCloud(userContent, finalFormatted, randomAnimal, localMsgId);
+
+        // AI 朋友开始说话啦！✨
+        this.playVoice(fullText);
       }
     } catch (err) {
       console.error('AI请求失败', err);

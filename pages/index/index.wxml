@@ -2,6 +2,11 @@
   <!-- 背景，使用用户提供的第二张图片 -->
   <image class="bg-layer" src="/images/bg.png" mode="aspectFill"></image>
 
+  <!-- 左上角声音开关 -->
+  <view class="sound-toggle" bindtap="toggleSound" style="top: {{statusBarHeight + 10}}px;">
+    <view class="sound-icon {{enableSound ? 'sound-on' : 'sound-off'}}">{{enableSound ? '🎵' : '🔇'}}</view>
+  </view>
+
   <!-- 聊天区域，整体不滚动 -->
   <view class="chat-area">
     <!-- AI气泡框（参考图1样式） -->

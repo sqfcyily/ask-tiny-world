@@ -20,6 +20,39 @@ page {
   z-index: -1;
 }
 
+/* 声音开关 */
+.sound-toggle {
+  position: absolute;
+  left: 15px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #E8D5C4;
+  border-radius: 20px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.sound-toggle:active {
+  transform: scale(0.9);
+}
+
+.sound-icon {
+  font-size: 20px;
+  transition: all 0.3s;
+}
+
+.sound-on {
+  animation: float 2s ease-in-out infinite;
+}
+
+.sound-off {
+  filter: grayscale(100%) opacity(0.6);
+}
+
 .chat-area {
   flex: 1;
   position: relative;
