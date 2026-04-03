@@ -134,7 +134,7 @@ page {
   position: relative; /* 尾巴跟在气泡下面 */
   /* 让尾巴始终保持在自身容器偏左的位置 */
   align-self: flex-start;
-  margin-left: 20%; /* 恢复成相对百分比，让尾巴定位随左侧边界走 */
+  margin-left: 20px; /* ✨ 使用固定的像素值，不随气泡变大而偏移 */
   width: 0;
   height: 0;
   border-left: 15px solid transparent;
