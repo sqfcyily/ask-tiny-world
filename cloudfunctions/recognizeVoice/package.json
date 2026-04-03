@@ -1,0 +1,15 @@
+{
+  "name": "recognize-voice",
+  "version": "1.0.0",
+  "description": "调用腾讯云一句话识别(ASR)将音频转换为文本",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ask Tiny World",
+  "license": "ISC",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.1",
+    "tencentcloud-sdk-nodejs-asr": "^4.0.0"
+  }
+}
