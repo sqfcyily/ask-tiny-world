@@ -9,19 +9,24 @@
 
   <!-- 聊天区域，整体不滚动 -->
   <view class="chat-area">
-    <!-- AI气泡框（参考图1样式） -->
+    <!-- AI气泡外层容器（固定宽度85%），内部靠左或居中对齐，取决于你想让气泡往哪边伸缩 -->
     <view class="ai-bubble-container" wx:if="{{latestAIMessage}}">
-      <!-- 气泡主体，使用 scroll-view 以便内容过多时内部滚动 -->
-      <scroll-view class="ai-bubble" scroll-y="true" scroll-into-view="{{scrollToMessage}}">
-        <view id="bubble-content" class="bubble-content">
-          <rich-text class="msg-text" nodes="{{latestAIMessage.formattedContent}}"></rich-text>
-          <view class="loading" wx:if="{{latestAIMessage.loading}}">
-            <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+      
+      <!-- 这是一个用来包裹气泡和尾巴的内层容器，它的宽度由内容决定 -->
+      <view class="bubble-wrapper">
+        <!-- 气泡主体，使用 scroll-view 以便内容过多时内部滚动 -->
+        <scroll-view class="ai-bubble" scroll-y="true" scroll-into-view="{{scrollToMessage}}">
+          <view id="bubble-content" class="bubble-content">
+            <rich-text class="msg-text" nodes="{{latestAIMessage.formattedContent}}"></rich-text>
+            <view class="loading" wx:if="{{latestAIMessage.loading}}">
+              <view class="dot"></view><view class="dot"></view><view class="dot"></view>
+            </view>
           </view>
-        </view>
-      </scroll-view>
-      <!-- 气泡的小尾巴 -->
-      <view class="bubble-tail"></view>
+        </scroll-view>
+        <!-- 气泡的小尾巴 -->
+        <view class="bubble-tail"></view>
+      </view>
+
     </view>
   </view>
 
