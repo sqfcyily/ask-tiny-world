@@ -44,7 +44,7 @@ exports.main = async (event, context) => {
     "VoiceType": 101016, // 音色：101016（女声，童音），非常适合给小朋友听！
     "PrimaryLanguage": 1, // 1: 中文
     "SampleRate": 16000, // 音频采样率
-    "Codec": "mp3" // 音频格式
+    "Codec": "mp3" // 音频格式，返回 mp3 格式
   };
 
   try {
