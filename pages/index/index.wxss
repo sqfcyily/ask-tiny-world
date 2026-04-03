@@ -287,6 +287,7 @@ page {
   flex: 1;
   padding: 15px;
   box-sizing: border-box;
+  height: 0; /* 强制 flex 子项计算高度，解决 scroll-view 在 flex 布局中不滚动的问题 */
 }
 
 .history-list {
