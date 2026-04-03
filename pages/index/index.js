@@ -204,6 +204,48 @@ Page({
     });
   },
 
+  // ✨ 清空云端和本地的回忆记录
+  clearHistory() {
+    wx.showModal({
+      title: '清空回忆',
+      content: '真的要把我们所有的对话都扔掉吗？',
+      confirmText: '扔掉吧',
+      confirmColor: '#D32F2F',
+      cancelText: '舍不得',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            wx.showLoading({ title: '正在清理...' });
+            const db = wx.cloud.database();
+            
+            // 云开发小程序端不能直接批量删除所有记录，所以我们需要获取所有ID然后逐个删除，或者调用云函数。
+            // 这里我们用一个简单的方法：遍历当前的本地 chatHistory 的 id 并在云端删除它们。
+            const { chatHistory } = this.data;
+            const deletePromises = chatHistory.map(item => 
+              db.collection('chat_history').doc(item.id).remove()
+            );
+            
+            await Promise.all(deletePromises);
+
+            // 清空本地数据和草地上的信封
+            this.setData({
+              chatHistory: [],
+              envelopes: [],
+              showHistory: false // 关掉弹窗
+            });
+
+            wx.hideLoading();
+            wx.showToast({ title: '回忆已清空', icon: 'none' });
+          } catch (err) {
+            wx.hideLoading();
+            console.error('清空云端回忆失败:', err);
+            wx.showToast({ title: '清理失败了', icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
   preventD() {
     // 阻止冒泡
   },

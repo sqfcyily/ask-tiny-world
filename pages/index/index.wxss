@@ -279,7 +279,22 @@ page {
   border: 2px solid #D32F2F;
 }
 
-.history-close:active {
+.history-clear {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-size: 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border: 2px solid #9E9E9E;
+}
+
+.history-close:active, .history-clear:active {
   transform: scale(0.9);
 }
 

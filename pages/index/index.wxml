@@ -72,6 +72,7 @@
     <view class="history-box" catchtap="preventD">
       <view class="history-header">
         <text class="history-title">🌟 我们的回忆信箱 🌟</text>
+        <view class="history-clear" bindtap="clearHistory">🗑️</view>
         <view class="history-close" bindtap="toggleHistory">✖</view>
       </view>
       <scroll-view class="history-scroll" scroll-y="true">
