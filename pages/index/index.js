@@ -232,10 +232,11 @@ Page({
       } else {
         // 对话成功，保存到历史记录
         const { chatHistory } = this.data;
+        const finalFormatted = this.formatContentToRichText(fullText);
         chatHistory.push({
           id: Date.now(),
           question: userContent,
-          answer: formatted // 存入处理过换行间距的富文本
+          answer: finalFormatted // 存入处理过换行间距的富文本
         });
         this.setData({ chatHistory });
         
