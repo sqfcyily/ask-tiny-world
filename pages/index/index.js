@@ -43,7 +43,6 @@ Page({
     recorderManager.onStop(async (res) => {
       console.log("录音文件路径：", res.tempFilePath);
       this.showMsg('我正在努力听你说的话哦，稍等一下下...');
-      wx.showLoading({ title: '小耳朵努力中...' });
 
       try {
         const fileManager = wx.getFileSystemManager();
