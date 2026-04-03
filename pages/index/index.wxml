@@ -78,10 +78,10 @@
         <view class="history-list">
           <view class="history-item" wx:for="{{chatHistory}}" wx:key="id">
             <view class="history-q-box">
-              <view class="history-avatar user-avatar">👦</view>
               <view class="history-bubble user-bubble">
                 <text>{{item.question}}</text>
               </view>
+              <view class="history-avatar user-avatar">👦</view>
             </view>
             <view class="history-a-box">
               <view class="history-avatar ai-avatar">{{item.aiAvatar || '🤖'}}</view>

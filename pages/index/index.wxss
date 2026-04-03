@@ -307,7 +307,7 @@ page {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  align-self: flex-start;
+  align-self: flex-end; /* 改为靠右对齐，代表小朋友发出的消息 */
   max-width: 85%;
 }
 
@@ -315,7 +315,7 @@ page {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  align-self: flex-start; /* 改为靠左对齐，与提问在同一侧 */
+  align-self: flex-start; /* 靠左对齐，代表AI回复 */
   max-width: 85%;
 }
 
@@ -347,13 +347,13 @@ page {
 .user-bubble {
   background: #E3F2FD;
   border: 2px solid #BBDEFB;
-  border-top-left-radius: 4px;
+  border-top-right-radius: 4px; /* 因为头像在右边，所以右上角为直角，模拟对话尾巴 */
 }
 
 .ai-history-bubble {
   background: #FFF;
   border: 2px solid #E8D5C4;
-  border-top-left-radius: 4px; /* 改为左上角直角，因为头像换到了左边 */
+  border-top-left-radius: 4px; /* 头像在左边，左上角为直角 */
 }
 
 .text-input-box {
