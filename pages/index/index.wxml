@@ -22,7 +22,7 @@
 
   <!-- 信封收集区 (左边草地)，代表历史记录 -->
   <!-- 作为一个整体进行光晕闪动动画 -->
-  <view class="envelopes-container {{envelopes.length > 0 ? 'container-glow' : ''}}">
+  <view class="envelopes-container {{envelopes.length > 0 ? 'container-glow' : ''}}" bindtap="toggleHistory">
     <view 
       wx:for="{{envelopes}}" 
       wx:key="id"
@@ -64,6 +64,34 @@
         focus="{{showTextInput}}" 
       />
       <view class="send-btn" bindtap="sendText">发送</view>
+    </view>
+  </view>
+
+  <!-- 历史对话弹窗 -->
+  <view class="history-mask" wx:if="{{showHistory}}" bindtap="toggleHistory">
+    <view class="history-box" catchtap="preventD">
+      <view class="history-header">
+        <text class="history-title">🌟 我们的回忆信箱 🌟</text>
+        <view class="history-close" bindtap="toggleHistory">✖</view>
+      </view>
+      <scroll-view class="history-scroll" scroll-y="true">
+        <view class="history-list">
+          <view class="history-item" wx:for="{{chatHistory}}" wx:key="id">
+            <view class="history-q-box">
+              <view class="history-avatar user-avatar">👦</view>
+              <view class="history-bubble user-bubble">
+                <text>{{item.question}}</text>
+              </view>
+            </view>
+            <view class="history-a-box">
+              <view class="history-bubble ai-history-bubble">
+                <rich-text class="msg-text" nodes="{{item.answer}}"></rich-text>
+              </view>
+              <view class="history-avatar ai-avatar">🤖</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
     </view>
   </view>
 </view>

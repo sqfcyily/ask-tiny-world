@@ -212,6 +212,150 @@ page {
   justify-content: flex-end;
 }
 
+/* 历史对话弹窗样式 */
+.history-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+}
+
+.history-box {
+  width: 88%;
+  height: 70vh;
+  background: #FFF9F0;
+  border-radius: 24px;
+  border: 4px solid #FFCA28;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  overflow: hidden;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.history-header {
+  height: 60px;
+  background: #FFCA28;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-bottom: 3px solid #FFB300;
+}
+
+.history-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #5D4037;
+  text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
+}
+
+.history-close {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  font-weight: bold;
+  color: #D32F2F;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  border: 2px solid #D32F2F;
+}
+
+.history-close:active {
+  transform: scale(0.9);
+}
+
+.history-scroll {
+  flex: 1;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+.history-item {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 历史记录里的气泡通用样式 */
+.history-q-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: flex-start;
+  max-width: 85%;
+}
+
+.history-a-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: flex-end;
+  max-width: 85%;
+}
+
+.history-avatar {
+  font-size: 30px;
+  background: #fff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #E8D5C4;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.history-bubble {
+  padding: 12px 16px;
+  border-radius: 18px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: #5D4037;
+  word-break: break-all;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.user-bubble {
+  background: #E3F2FD;
+  border: 2px solid #BBDEFB;
+  border-top-left-radius: 4px;
+}
+
+.ai-history-bubble {
+  background: #FFF;
+  border: 2px solid #E8D5C4;
+  border-top-right-radius: 4px;
+}
+
 .text-input-box {
   background: #fff;
   padding: 16px 20px;

@@ -6,6 +6,7 @@ Page({
     statusBarHeight: 20,
     chatHistory: [], // 保存的历史对话
     envelopes: [],   // 控制草地上的信封显示
+    showHistory: false, // 控制历史对话弹窗的显示
     latestAIMessage: {
       id: 'init',
       role: 'ai',
@@ -121,6 +122,14 @@ Page({
     });
   },
 
+  // 切换历史记录弹窗
+  toggleHistory() {
+    if (this.data.envelopes.length === 0) return; // 如果没有信封就不弹
+    this.setData({
+      showHistory: !this.data.showHistory
+    });
+  },
+
   preventD() {
     // 阻止冒泡
   },
@@ -224,8 +233,9 @@ Page({
         // 对话成功，保存到历史记录
         const { chatHistory } = this.data;
         chatHistory.push({
+          id: Date.now(),
           question: userContent,
-          answer: fullText
+          answer: formatted // 存入处理过换行间距的富文本
         });
         this.setData({ chatHistory });
         
