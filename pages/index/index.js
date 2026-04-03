@@ -230,13 +230,18 @@ Page({
       if (!fullText) {
         throw new Error('AI返回内容为空');
       } else {
+        // 随机分配一个小动物头像
+        const animals = ['🦊', '🐿️', '🦉', '🐻', '🐰'];
+        const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+
         // 对话成功，保存到历史记录
         const { chatHistory } = this.data;
         const finalFormatted = this.formatContentToRichText(fullText);
         chatHistory.push({
           id: Date.now(),
           question: userContent,
-          answer: finalFormatted // 存入处理过换行间距的富文本
+          answer: finalFormatted, // 存入处理过换行间距的富文本
+          aiAvatar: randomAnimal // 记录本次对话的 AI 头像
         });
         this.setData({ chatHistory });
         

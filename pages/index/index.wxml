@@ -84,10 +84,10 @@
               </view>
             </view>
             <view class="history-a-box">
+              <view class="history-avatar ai-avatar">{{item.aiAvatar || '🤖'}}</view>
               <view class="history-bubble ai-history-bubble">
                 <rich-text class="msg-text" nodes="{{item.answer}}"></rich-text>
               </view>
-              <view class="history-avatar ai-avatar">🤖</view>
             </view>
           </view>
         </view>

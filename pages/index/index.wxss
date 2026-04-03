@@ -315,7 +315,7 @@ page {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  align-self: flex-end;
+  align-self: flex-start; /* 改为靠左对齐，与提问在同一侧 */
   max-width: 85%;
 }
 
@@ -353,7 +353,7 @@ page {
 .ai-history-bubble {
   background: #FFF;
   border: 2px solid #E8D5C4;
-  border-top-right-radius: 4px;
+  border-top-left-radius: 4px; /* 改为左上角直角，因为头像换到了左边 */
 }
 
 .text-input-box {
