@@ -42,19 +42,45 @@ Page({
     // 监听录音结束事件
     recorderManager.onStop(async (res) => {
       console.log("录音文件路径：", res.tempFilePath);
-      // 由于没有同声传译，这里可以先用一个可爱的话语提示，
-      // 如果你需要后端或者云函数支持语音转文字，我们可以在这里通过 wx.uploadFile 把语音传上去哦！
-      // 现在的替代方案是，模拟一个“听不懂但很可爱”的回复，或者你可以之后接入云开发的语音识别服务～
-      this.showMsg('我正在听你说...')
+      this.showMsg('我正在努力听你说的话哦，稍等一下下...');
+      wx.showLoading({ title: '小耳朵努力中...' });
+
       try {
-        // TODO: LO，这里之后可以接入腾讯云或你自己的语音识别接口。
-        // 目前我先让它提示用户用文字输入，因为小程序原生没有自带免费的语音转文字 API 了呢。
-        setTimeout(() => {
-          wx.hideLoading();
-          this.showMsg('我还在学习怎么听懂声音呢，你先用信箱写字告诉我好不好呀？')
-        }, 1000);
+        const fileManager = wx.getFileSystemManager();
+        
+        // 1. 读取录音文件，转换为 Base64 格式
+        const audioBase64 = fileManager.readFileSync(res.tempFilePath, 'base64');
+        // 获取文件大小（字节数）
+        const fileInfo = fileManager.statSync(res.tempFilePath);
+        const dataLen = fileInfo.size;
+
+        // 2. 调用我们刚刚写好的云函数 recognizeVoice
+        const result = await wx.cloud.callFunction({
+          name: 'recognizeVoice',
+          data: {
+            audioBase64: audioBase64,
+            voiceFormat: 'mp3',
+            dataLen: dataLen
+          }
+        });
+
+        wx.hideLoading();
+        
+        const recognizeRes = result.result;
+        if (recognizeRes && recognizeRes.code === 0 && recognizeRes.text) {
+          // 语音识别成功！将文字发给 AI 助手进行对话
+          console.log("识别出的文字：", recognizeRes.text);
+          this.sendUserMessage(recognizeRes.text);
+        } else {
+          // 云函数报错或没有识别出文字
+          console.error("云函数语音识别失败:", recognizeRes);
+          this.showMsg('哎呀，我好像没听清，声音是不是太小了？能用信箱写给我吗？');
+        }
+
       } catch (err) {
         wx.hideLoading();
+        console.error('调用语音识别云函数出错:', err);
+        this.showMsg('我的小耳朵好像有点累了，你先用信箱写字告诉我好不好呀？');
         wx.showToast({ title: '识别失败啦', icon: 'none' });
       } finally {
         this.setData({ isRecording: false });
@@ -63,7 +89,7 @@ Page({
 
     recorderManager.onError((res) => {
       console.error("录音错误：", res.errMsg);
-      this.showMsg('麦克风好像坏啦')
+      this.showMsg('麦克风好像坏啦');
       this.setData({ isRecording: false });
     });
   },

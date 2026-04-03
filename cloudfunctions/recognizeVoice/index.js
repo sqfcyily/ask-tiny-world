@@ -25,11 +25,11 @@ exports.main = async (event, context) => {
   }
 
   // 从云函数的环境变量中读取密钥，绝对安全！
-  const secretId = process.env.TENCENTCLOUD_SECRET_ID;
-  const secretKey = process.env.TENCENTCLOUD_SECRET_KEY;
+  const secretId = process.env.ASR_CLOUD_SECRET_ID;
+  const secretKey = process.env.ASR_CLOUD_SECRET_KEY;
 
   if (!secretId || !secretKey) {
-    return { code: -2, message: '云端未配置 TENCENTCLOUD_SECRET_ID 或 TENCENTCLOUD_SECRET_KEY 环境变量' };
+    return { code: -2, message: '云端未配置 ASR_CLOUD_SECRET_ID 或 ASR_CLOUD_SECRET_KEY 环境变量' };
   }
 
   const clientConfig = {
